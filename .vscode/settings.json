@@ -1,4 +1,5 @@
 {
+    "latex-workshop.latex.autoBuild.run": "never",
     "latex-workshop.intellisense.unimathsymbols.enabled": true,
     "latex-workshop.latex.recipe.default": "latexmk (xelatex)",
     "latex-workshop.view.pdf.viewer": "tab",
