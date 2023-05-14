@@ -1,4 +1,4 @@
-\section{背景}\label{sec:background}
+\section{背\ 景}\label{sec:background}
 
 \subsection{微服务（MicroService）}
 微服务（Microservice）是一种基于服务架构（Service-Oriented Architecture，SOA）的软件设计风格和架构模式，将单一应用（Monolithic）程序拆分为一组独立的、小型的微服务，每个微服务都可以独立开发、部署、扩展、升级，已被广泛应用于云计算、容器化、DevOps等领域，是现代软件开发中的重要架构之一。
@@ -32,6 +32,7 @@
 库操作系统（Library Operating System，简称LibOS）是一种将操作系统内核提供的资源管理、系统调用等功能以库的形式提供给应用程序的操作系统，具有模块化、专用化、单地址空间的特点。相比于传统的操作系统，由于功能在库中实现，开发者可以根据自己的需要对库进行定制和扩展，从而使LibOS可以更加轻量级、更加灵活地提供需要的功能，从而提高应用程序的性能和可扩展性。
 
 因为SGX本质上是硬件隔离的内存区域，上面只有很少的库函数，不能提供POSIX接口功能，因此想要将外部程序放到SGX中运行，可以使用LibOS提供运行时环境，达到不需要更改或极少更改源程序的目的。可以在SGX中运行的LibOS有Graphene-SGX~\cite{}、Occlum~\cite{}等。
+
 \subsection{远程验证协议}
 
 远程验证协议是一种用于验证远程实体的安全性和完整性的协议。通常会在一个可信的环境中运行，用来确保远程设备的代码和数据没有被篡改或者受到攻击。
@@ -77,7 +78,7 @@ Diffie-Hellman密钥交换（DHKE）算法~\cite{}是SGX远程验证协议和TLS
 在此过程中，恶意攻击者Eve即使截获了所有信息，也无法计算出对称密钥，因为她无法解决离散对数问题。
 
 % TODO：思考，这个真的有必要作为背景出现吗？
-\subsection{令牌（Token）授权}
+\subsection{令牌（Token）授权}\label{subsec:token}
 
 令牌（Token）是一种用于身份验证和授权的加密字符串。在SOA架构中，Token是一种常见的认证和授权机制，例如传统单一应用中客户端（Client）可以向服务端（Server）传递Token证明自己的身份信息和拥有的权限。但在微服务场景中，除了Client向API网关传递Token进行认证和授权，在微服务节点间也需要携带Token，否则可能会导致未经授权的节点访问到机密信息，造成隐私泄露。同时为了减小隐私扩散，需要设计细粒度的Token认证和授权模式。JWT（JSON Web Token）~\cite{}是一种常见的Token格式，具有自包含、可扩展、跨语言的特点，符合微服务细粒度、异构性的要求，已得到广泛应用。
 
