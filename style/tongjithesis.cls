@@ -304,7 +304,7 @@
 	\end{center}
 	\vspace{1pt}
 	\begin{center}\heiti\zihao{4}
-		摘要
+		摘\ 要
 	\end{center}
 	\vspace{-0.5em}
 
