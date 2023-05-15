@@ -1,6 +1,5 @@
 .DS_Store
 _out
-!figures/tongji.pdf
 
 # LaTeX compile output files
 *.pdf
@@ -19,3 +18,5 @@ _out
 _minted-main/
 
 *_example.*
+
+!figures/*.pdf
