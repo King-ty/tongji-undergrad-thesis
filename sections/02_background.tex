@@ -43,9 +43,14 @@ SGX远程验证（SGX remote attestation）~\cite{intel-sgx-ra}是Intel SGX提�
 
 在远程验证过程中涉及三个参与方：挑战者（Challenger）、被验者（Attester）和IAS。挑战者是发起验证的一方，被验者是被验证的一方，IAS是被验者和挑战者之间的信任第三方。
 
-% TODO：插入图片
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=.7\textwidth]{figures/sgx-ra.png}
+    \caption{SGX官网的远程验证完整流程图}
+    \label{fig:sgx-ra}
+\end{figure}
 
-图XXX描述了SGX远程验证的过程，其中描绘的消息流简述如下：
+图\ref{fig:sgx-ra}描述了SGX远程验证的过程，其中描绘的消息流简述如下：
 
 \begin{itemize}
     \item \textbf{消息 0}：挑战者将其公钥发送给被验者，表示开始新的认证过程。
@@ -60,13 +65,26 @@ SGX远程验证（SGX remote attestation）~\cite{intel-sgx-ra}是Intel SGX提�
 
 传输层安全协议（Transport Layer Security，简称TLS）~\cite{8446}，其前身为安全套接层（Secure Sockets Layer，简称SSL），是一种基于加密技术的安全协议，目的是为互联网通信提供机密性、完整性保障。TLS可以用来防御中间人攻击（MITM）、重放攻击（Replay Attack）等~\cite{8446}，可以无耦合的为高层应用协议（例如HTTP）提供安全支持，因此广泛应用于网络通信中。
 
-TLS协议在传输层协议（例如TCP）建立连接后，首先通过握手协议交换信息协商对称密钥，建立安全连接，然后加密数据传输。目前最新的TLS版本为TLS 1.3~\cite{8446}，在之前版本的基础上放弃了安全性较低的加密算法，优化了握手协议使其能够1-RTT完成（如图XXX所示），并初步支持了0-RTT状态恢复机制。但是TLS的0-RTT恢复方式可能会引起重放攻击，目前已有的研究（例如Anti-Replay~\cite{8446}等）可能会引起额外的计算和资源消耗。
+TLS协议在传输层协议（例如TCP）建立连接后，首先通过握手协议交换信息协商对称密钥，建立安全连接，然后加密数据传输。目前最新的TLS版本为TLS 1.3~\cite{8446}，在之前版本的基础上放弃了安全性较低的加密算法，优化了握手协议使其能够1-RTT完成（如图\ref{fig:1-rtt}所示），并初步支持了0-RTT状态恢复机制。但是TLS的0-RTT恢复方式可能会引起重放攻击，目前已有的研究（例如Anti-Replay~\cite{8446}等）可能会引起额外的计算和资源消耗。
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=.7\textwidth]{figures/1-RTT.svg}
+    \caption{TLS 1.3初始1-RTT握手流程}
+    \label{fig:1-rtt}
+\end{figure}
 
 \subsection{Diffie-Hellman密钥交换（DHKE）算法}
 
-Diffie-Hellman密钥交换（DHKE）算法~\cite{diffie2022new}是SGX远程验证协议和TLS握手协议使用的一种重要生成对称密钥的算法。该算法的基本思想是，两个通信方通过交换各自的部分公开信息，结合自己的私有信息计算出一个共享的对称密钥。DH算法基于离散对数问题，其安全性依赖于离散对数问题的难解性，即给定素数p、整数g和$g^x$，求x的值。DH算法的具体过程如图XXX所示：
+Diffie-Hellman密钥交换（DHKE）算法~\cite{diffie2022new}是SGX远程验证协议和TLS握手协议使用的一种重要生成对称密钥的算法。该算法的基本思想是，两个通信方通过交换各自的部分公开信息，结合自己的私有信息计算出一个共享的对称密钥。DH算法基于离散对数问题，其安全性依赖于离散对数问题的难解性，即给定素数p、整数g和$g^x$，求x的值。DH算法的具体过程如图\ref{fig:dhke}所示：
 
-% TODO：插入图示
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=.7\textwidth]{figures/DHKE.svg}
+    \caption{DHKE算法示意图}
+    \label{fig:dhke}
+\end{figure}
+
 
 \begin{enumerate}
     \item 通信双方Alice和Bob首先公开素数p和整数g，g为p的原根。
@@ -95,8 +113,14 @@ Diffie-Hellman密钥交换（DHKE）算法~\cite{diffie2022new}是SGX远程验�
 
 远程过程调用（Remote Procedure Call，简称RPC）是一种计算机通信协议，它允许一个计算机程序调用另一个地址空间（通常是远程的）的子程序或函数，就像本地调用一样使用这个函数，而不需要了解底层网络细节。这使得应用程序可以分布在不同的计算机上，通过网络通信进行远程访问和协作。因为RPC具有简单易用、跨语言支持、高性能、轻量级的特点，成为了微服务节点间通信的主要方式。常见的RPC框架有gRPC~\cite{grpc}、Apache Thrift~\cite{Thrift}等。
 
-% TODO：插入图示
-图XXX展示了RPC调用流程。RPC通过桩（Stub）对应用屏蔽底层网络细节。客户端Stub将调用参数序列化，打包成网络消息发送给服务端；服务端的Stub将网络消息解包、反序列化得到调用参数，然后调用本地的服务程序；执行结束后，结果数据以类似的方式返回给客户的调用者。
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=.7\textwidth]{figures/RPC.svg}
+    \caption{RPC流程图}
+    \label{fig:rpc}
+\end{figure}
+
+图\ref{fig:rpc}展示了RPC调用流程。RPC通过桩（Stub）对应用屏蔽底层网络细节。客户端Stub将调用参数序列化，打包成网络消息发送给服务端；服务端的Stub将网络消息解包、反序列化得到调用参数，然后调用本地的服务程序；执行结束后，结果数据以类似的方式返回给客户的调用者。
 
 \subsection{Rust语言}
 
