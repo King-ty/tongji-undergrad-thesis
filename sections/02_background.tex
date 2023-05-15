@@ -54,7 +54,7 @@ SGX远程验证（SGX remote attestation）~\cite{intel-sgx-ra}是Intel SGX提�
 
 \begin{itemize}
     \item \textbf{消息 0}：挑战者将其公钥发送给被验者，表示开始新的认证过程。
-    \item \textbf{消息 1}：被验者收到消息0后，使用该公钥创建DHKE~\cite{diffie2022new}的上下文，并将自己的公钥发送给挑战者。% TODO：引用参考uranus这里的引用
+    \item \textbf{消息 1}：被验者收到消息0后，使用该公钥创建DHKE~\cite{Diffie1976NewDI}的上下文，并将自己的公钥发送给挑战者。
     \item \textbf{消息 2}：挑战者使用DHKE算法导出对称共享密钥（SK），并生成消息2，其中包含挑战者的公钥、两个公钥（挑战者和被验者）的串联签名以及使用共享密钥生成的消息验证码（MAC）。
     \item \textbf{消息 3}：被验者检查消息2并借助Quoting Enclave（QE）创建QUOTO，并用SK生成MAC，包含在消息3中。
     \item \textbf{QUOTE检查}：挑战者验证MAC并将QUOTE发送给IAS。IAS验证QUOTE的签名和结构，然后用认证验证报告（AVR）回答。如果AVR状态为“OK”，则挑战者可以信任QUOTE的内容，并将其与参考值（期望的MRENCLAVE或MRSIGNER）进行比较。
@@ -69,18 +69,18 @@ TLS协议在传输层协议（例如TCP）建立连接后，首先通过握手�
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=.7\textwidth]{figures/1-RTT.svg}
+    \includegraphics[width=.7\textwidth]{figures/1-RTT.png}
     \caption{TLS 1.3初始1-RTT握手流程}
     \label{fig:1-rtt}
 \end{figure}
 
 \subsection{Diffie-Hellman密钥交换（DHKE）算法}
 
-Diffie-Hellman密钥交换（DHKE）算法~\cite{diffie2022new}是SGX远程验证协议和TLS握手协议使用的一种重要生成对称密钥的算法。该算法的基本思想是，两个通信方通过交换各自的部分公开信息，结合自己的私有信息计算出一个共享的对称密钥。DH算法基于离散对数问题，其安全性依赖于离散对数问题的难解性，即给定素数p、整数g和$g^x$，求x的值。DH算法的具体过程如图\ref{fig:dhke}所示：
+Diffie-Hellman密钥交换（DHKE）算法~\cite{Diffie1976NewDI}是SGX远程验证协议和TLS握手协议使用的一种重要生成对称密钥的算法。该算法的基本思想是，两个通信方通过交换各自的部分公开信息，结合自己的私有信息计算出一个共享的对称密钥。DH算法基于离散对数问题，其安全性依赖于离散对数问题的难解性，即给定素数p、整数g和$g^x$，求x的值。DH算法的具体过程如图\ref{fig:dhke}所示：
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=.7\textwidth]{figures/DHKE.svg}
+    \includegraphics[width=.7\textwidth]{figures/DHKE.png}
     \caption{DHKE算法示意图}
     \label{fig:dhke}
 \end{figure}
@@ -115,7 +115,7 @@ Diffie-Hellman密钥交换（DHKE）算法~\cite{diffie2022new}是SGX远程验�
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=.7\textwidth]{figures/RPC.svg}
+    \includegraphics[width=.5\textwidth]{figures/RPC.png}
     \caption{RPC流程图}
     \label{fig:rpc}
 \end{figure}
