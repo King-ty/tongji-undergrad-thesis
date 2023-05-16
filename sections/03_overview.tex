@@ -35,7 +35,7 @@
     \label{fig:architecture}
 \end{figure}
 
-图\ref{fig:architecture}展示了平台的总体架构。最外层的框代表硬件基础，其上运行着操作系统和安全飞地（Enclave）。将Enclave放大，内部运行着使用Rust语言编写的微服务节点程序，其结构类似于普通的进程，但是在库区域会有特殊的运行时库，提供操作系统相关功能的支持。
+图\ref{fig:architecture}展示了平台的总体架构。浅蓝色的外框框代表硬件基础，其上运行着不可信的操作系统（浅橙色表示）和可信的SGX飞地（Enclave，绿色表示）。将Enclave放大，内部运行着使用Rust语言编写的微服务节点程序，其结构类似于普通的进程，但是在库区域会有特殊的运行时库（LibRT），提供操作系统相关功能的支持。
 % ；但是我们同时借鉴了Rust-SGX的思想，在编译阶段将一些操作利用Rust-SGX提供的编译方法编译进程序中，这样可以减少对OS的依赖，从而可以进一步缩减Graphene为Rust-SGX不能支持的功能集合。我们将Rust-SGX不能支持的部分划分为模块，开发者可以根据自己开发节点的需要选择需要的模块进行编译，由此得到了一个模块化、小TCB的运行时。
 
 节点之间的通信使用本次设计的安全通信协议进行保护，同时节点还要借助IAS提供的远程验证机制对其他节点的身份等进行验证。上层应用层通过gRPC进行远程过程调用。
@@ -105,7 +105,7 @@
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=.6\textwidth]{figures/msdemo.pdf}
+    \includegraphics[width=.7\textwidth]{figures/msdemo.pdf}
     \caption{微服务示例程序结构图}
     \label{fig:ms-demo}
 \end{figure}

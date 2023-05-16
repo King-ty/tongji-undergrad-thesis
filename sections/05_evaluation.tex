@@ -6,11 +6,13 @@
 
 \subsection{性能表现}
 
-在这部分，由于其他相关工作都没有开源实现，因此我们只是简单比较了微服务示例程序在SGX内外的通信和计算性能表现。如图\ref{fig:evaluation}所示，我们可以看到，随着图片尺寸的增大，在SGX内外运行的微服务程序通信延迟都相应增大，在SGX中运行的微服务节点间的通信带来了额外的31.9\%的延迟，推测是数据进出SGX飞地时加解密造成的；但相比于SGX提供的安全保障，这些延迟是可以接受的。而在计算性能方面，SGX内外的计算耗时相比于通信延迟都是可以忽略不计的。
+在这部分，由于其他相关工作都没有开源实现，因此我们只是简单比较了微服务示例程序在SGX内外的通信和计算性能表现。我们将微服务示例程序分别在SGX外的Linux系统和SGX内的运行时内运行，对于每种尺寸的图片测试10次通信和计算开销，并计算得到平均值；在SGX外运行的程序我们使用TLS协议提供通信安全支持。
+
+如图\ref{fig:evaluation}所示，我们可以看到，随着图片尺寸的增大，在SGX内外运行的微服务程序通信延迟都相应增大，在SGX中运行的微服务节点间的通信带来了额外的31.9\%的延迟，推测是数据进出SGX飞地时加解密造成的；但相比于SGX提供的安全保障，这些延迟是可以接受的。而在计算性能方面，SGX内外的计算耗时相比于通信延迟都是可以忽略不计的。
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=.6\textwidth]{figures/evaluation.pdf}
+    \includegraphics[width=.5\textwidth]{figures/evaluation.pdf}
     \caption{SGX内外微服务通信和计算耗时}
     \label{fig:evaluation}
 \end{figure}

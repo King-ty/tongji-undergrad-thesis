@@ -45,7 +45,7 @@ SGX远程验证（SGX remote attestation）~\cite{intel-sgx-ra}是Intel SGX提�
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=.7\textwidth]{figures/sgx-ra.png}
+    \includegraphics[width=.6\textwidth]{figures/sgx-ra.png}
     \caption{SGX官网的远程验证完整流程图}
     \label{fig:sgx-ra}
 \end{figure}
@@ -65,11 +65,11 @@ SGX远程验证（SGX remote attestation）~\cite{intel-sgx-ra}是Intel SGX提�
 
 传输层安全协议（Transport Layer Security，简称TLS）~\cite{8446}，其前身为安全套接层（Secure Sockets Layer，简称SSL），是一种基于加密技术的安全协议，目的是为互联网通信提供机密性、完整性保障。TLS可以用来防御中间人攻击（MITM）、重放攻击（Replay Attack）等~\cite{8446}，可以无耦合的为高层应用协议（例如HTTP）提供安全支持，因此广泛应用于网络通信中。
 
-TLS协议在传输层协议（例如TCP）建立连接后，首先通过握手协议交换信息协商对称密钥，建立安全连接，然后加密数据传输。目前最新的TLS版本为TLS 1.3~\cite{8446}，在之前版本的基础上放弃了安全性较低的加密算法，优化了握手协议使其能够1-RTT完成（如图\ref{fig:1-rtt}所示），并初步支持了0-RTT状态恢复机制。但是TLS的0-RTT恢复方式可能会引起重放攻击，目前已有的研究（例如Anti-Replay~\cite{8446}等）可能会引起额外的计算和资源消耗。
+TLS协议在传输层协议（例如TCP）建立连接后，首先通过握手协议交换信息协商对称密钥，建立安全连接，然后加密数据传输。目前最新的TLS版本为TLS 1.3~\cite{8446}，在之前版本的基础上放弃了安全性较低的加密算法，优化了握手协议使其能够1-RTT完成（如图\ref{fig:1-rtt}所示，第一个通信来回已经完成握手），并初步支持了0-RTT状态恢复机制。但是TLS的0-RTT恢复方式可能会引起重放攻击，目前已有的研究（例如Anti-Replay~\cite{8446}等）可能会引起额外的计算和资源消耗。
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=.7\textwidth]{figures/1-RTT.png}
+    \includegraphics[width=.6\textwidth]{figures/1-RTT.png}
     \caption{TLS 1.3初始1-RTT握手流程}
     \label{fig:1-rtt}
 \end{figure}
@@ -80,7 +80,7 @@ Diffie-Hellman密钥交换（DHKE）算法~\cite{Diffie1976NewDI}是SGX远程验
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=.7\textwidth]{figures/DHKE.png}
+    \includegraphics[width=.6\textwidth]{figures/DHKE.pdf}
     \caption{DHKE算法示意图}
     \label{fig:dhke}
 \end{figure}
