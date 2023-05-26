@@ -1,23 +1,109 @@
 \section{评\ 估}\label{sec:evaluation}
 
-\paragraph{实验环境}
-
-我们在一台拥有Intel E3-1280 V6 CPU、64GB内存、支持SGX v1的服务器上运行程序和进行实验。该机器运行Ubuntu 22.04操作系统，内核版本为5.15.0-56-generic。
+\textbf{实验环境：}我们在3台拥有Intel E3-1280 V6 CPU、64GB内存、支持SGX v1的服务器上运行程序和进行实验。其中1台机器运行Ubuntu 22.04操作系统，内核版本为5.15.0-56-generic；另外两台运行Ubuntu 16.04，内核版本为4.4.0-210-generic和4.4.0-176-generic。我们在3台机器上分别配置了SGX内和SGX外的运行环境，在Ubuntu 22.04系统的机器上运行各微服务程序，在另外两台机器上分别运行API网关和客户端程序，由此进行实验评估。
 
 \subsection{性能表现}
 
-在这部分，由于其他相关工作都没有开源实现，因此我们只是简单比较了微服务示例程序在SGX内外的通信和计算性能表现。我们将微服务示例程序分别在SGX外的Linux系统和SGX内的运行时内运行，对于每种尺寸的图片测试10次通信和计算开销，并计算得到平均值；在SGX外运行的程序我们使用TLS协议提供通信安全支持。
+由于其他相关工作都没有开源实现，且侧重点有所区别，因此我们的工作聚焦于比较微服务示例程序在SGX内外的通信和计算性能表现。
 
-如图\ref{fig:evaluation}所示，我们可以看到，随着图片尺寸的增大，在SGX内外运行的微服务程序通信延迟都相应增大，在SGX中运行的微服务节点间的通信带来了额外的31.9\%的延迟，推测是数据进出SGX飞地时加解密造成的；但相比于SGX提供的安全保障，这些延迟是可以接受的。而在计算性能方面，SGX内外的计算耗时相比于通信延迟都是可以忽略不计的。
-
-% TODO：重新画图，纵坐标转指数坐标，线性更容易看。
+为了比较不同运行环境和通信协议下的性能，以及比较不同类型微服务的性能，我们将微服务示例程序分别在SGX外的Linux系统和SGX内的运行时内运行，在64*64、128*128、256*256、512*512、1024*1024和2048*2048共6种不同尺寸的标准测试图片上分别测试了灰度图服务、模糊图服务和字符画服务，每种情况测试20次，分别记录用户端总用时、API网关总用时和微服务节点用时，由此计算出用户端和API网关的端到端通信往返时间、API网关和微服务节点的端到端通信往返时间以及微服务节点的处理时间，并计算得到平均值，得到的结果如图\ref{fig:evaluation}所示。
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=.5\textwidth]{figures/evaluation.pdf}
-    \caption{SGX内外微服务通信和计算耗时}
+    \begin{subfigure}{0.96\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/grayscale.pdf}
+        \caption{灰度图服务}
+    \end{subfigure}
+    \begin{subfigure}{0.96\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/blur.pdf}
+        \caption{模糊图服务}
+    \end{subfigure}
+    \begin{subfigure}{0.96\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/ascii.pdf}
+        \caption{字符画服务}
+    \end{subfigure}
+    \caption{SGX内外不同微服务通信和计算耗时}
     \label{fig:evaluation}
 \end{figure}
+
+我们可以看到，在三种不同的微服务中，随着图片尺寸的增大，在SGX内外运行的微服务程序通信延迟都相应增大，但是相差较小，在SGX中运行的微服务节点间的通信带来了额外的约14.3\%的延迟，推测是数据进出SGX飞地时加解密造成的；但是由于网络通信的主要开销来自于网络包的传递，因此二者差别较小，相比于SGX提供的安全保障，这些延迟是可以接受的。而在计算性能方面，SGX内的运行时带来了4.79\~7.56倍的计算开销，这一较大的开销与我们对Graphene-SGX和Rust-SGX的测试是相符合的，对于微服务计算的场景来说需要通过进一步的研究来降低。
+
+对于不同微服务之间的通信和计算开销的比较，我们发现通信开销中字符画服务最小，而模糊图服务最大。原因是字符画服务会经过裁剪，输出数据量是最小的；而模糊图服务经过模糊处理后图像压缩比会下降，导致输出的数据量最大。对于计算开销，灰度图服务最小，而模糊图服务最大。原因是灰度图服务只需要进行简单的灰度转换，计算简单；而模糊图服务基于高斯模糊（Gaussian blur）算法，需要进行卷积操作，计算开销最大。
+
+对于字符画服务，由于其还要与调整大小服务和灰度图服务进行通信，且因为调整图片大小导致数据量变化，因此我们对其进行了更细致的分析，将字符画服务处理时间细分为解码图片、与调整大小微服务通信、调整大小微服务处理、与灰度图微服务通信、灰度图微服务处理、字符画微服务计算共6个部分，得到了如图\ref{fig:evaluation-ascii}所示的结果。
+
+\begin{figure}[!ht]
+    \centering
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/decode_image.pdf}
+        \caption{解码图片}
+    \end{subfigure}
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/ascii_to_resize.pdf}
+        \caption{与调整大小微服务通信}
+    \end{subfigure}
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/resize_service.pdf}
+        \caption{调整大小微服务处理}
+    \end{subfigure}
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/ascii_to_grayscale.pdf}
+        \caption{与灰度图微服务通信}
+    \end{subfigure}
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/grayscale_service.pdf}
+        \caption{灰度图微服务处理}
+    \end{subfigure}
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/ascii_cal.pdf}
+        \caption{字符画微服务计算}
+    \end{subfigure}
+    \caption{字符画微服务处理各部分时间}
+    \label{fig:evaluation-ascii}
+\end{figure}
+
+由于字符画微服务的处理逻辑是将宽度大于256的图片等比例调整为宽度为256的图片，宽度小于256的图片不需要经过调整大小微服务处理，因此在解码图片部分，随图片大小增大，解码耗时随之增大；在与调整大小微服务通信以及调整大小微服务处理部分，在图片小于等于256时时间消耗为0，之后随着图片宽度的增大，这两部分的时间都在增加，且通信的开销远小于处理的开销；在与灰度图微服务通信、灰度图微服务处理和字符画微服务计算部分，以256为分割点，在图片小于256时，随着图片宽度的增大开销逐渐增大，而图片大于256后开销则基本稳定（甚至有所下降），因为此时处理的图片都是统一调整为256的图片。总体来说，字符画微服务的处理时间的瓶颈主要是解码图片和调整大小微服务处理，而通信开销则较小；同时在SGX内和SGX外的通信和计算性能表现差距和之前的测定基本一致。
+
+在以上分析的基础上，我们对于RPC的各部分细粒度开销分析有兴趣，因此我们在TCP基础上实现了一个简单的RPC模型进一步分析了RPC的各部分开销。该模型的场景是矩阵运算，也是一种合适的微服务计算场景。
+
+\begin{figure}[!ht]
+    \centering
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/matrix_connect.pdf}
+        \caption{建立TCP连接}
+    \end{subfigure}
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/matrix_communication.pdf}
+        \caption{网络通信}
+    \end{subfigure}
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/matrix_calculate.pdf}
+        \caption{矩阵计算}
+    \end{subfigure}
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/matrix_serialize.pdf}
+        \caption{序列化和反序列化}
+    \end{subfigure}
+    \caption{RPC各部分耗时}
+    \label{fig:matrix-evaluation}
+\end{figure}
+
+如图\ref{fig:matrix-evaluation}所示，我们将RPC的耗时分为建立TCP连接、网络通信、矩阵计算、序列化和反序列化共4个不同的开销部分，分别在服务端和客户端对秩为32*32、64*64、128*128、256*256、512*512的方阵测量耗时。对于建立TCP连接部分，虽然有波动，但基本和数据量大小没有关系；然而跨SGX的延迟是SGX外的1.25\~3.37倍。对于网络通信部分，跨SGX通信开销是SGX外的1.143倍左右。对于矩阵计算开销，SGX内的计算约为SGX外的6.01倍。对于序列化和反序列化开销，可以看到数据的明显分层，即SGX服务端反序列化>SGX客户端反序列化>SGX服务端序列化>SGX客户端序列化>非SGX服务端反序列化$\approx$非SGX服务端序列化>非SGX客户端反序列化$\approx$非SGX客户端序列化；总体来说，这一部分也是计算部分，SGX内比SGX外有额外3.40\~4.62的开销。
+
+综合来看，在本次设计中，通信的额外开销较小，但计算的额外开销较大，需要进一步优化。
 
 \subsection{安全分析}
 

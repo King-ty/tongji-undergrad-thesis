@@ -3,7 +3,7 @@
 
     为了保障运行环境的安全性和通信的安全和高效性，我们针对微服务安全计算场景的特点，设计实现了一个基于可信执行环境的安全高效微服务计算平台，包含一个细粒度、模块化的运行时系统以及一个安全高效的通信协议。我们的运行时具有较小的TCB，并通过借助Intel SGX提供的保护，可以避免特权态攻击；我们的通信安全协议结合了TLS和SGX远程验证的特点，能够防御中间人攻击和重放攻击，确保通信节点的合法性，并能够实现更小的通信延迟。
 
-    为了验证平台的性能，我们还设计实现了一个图像处理微服务示例应用。该应用使用Rust语言实现，用以保障程序本身的安全性；该应用使用gRPC进行通信并使用JWT交换的授权管理方式，能够实现高效通信和细粒度的授权管理。我们在云服务器上进行了测试，结果表明，我们的平台达到了安全高效的微服务计算的设计目标。
+    为了验证平台的性能，我们还设计实现了一个图像处理微服务示例应用。该应用使用Rust语言实现，用以保障程序本身的安全性；该应用使用gRPC进行通信并使用Token交换的授权管理方式，能够实现高效通信和细粒度的授权管理。我们在云服务器上进行了测试，结果表明，我们的平台达到了安全高效的微服务计算的设计目标。
 }{微服务，可信执行环境，Intel SGX，运行时，安全通信协议，Rust语言，安全性}
 
 \MakeAbstractEng{
@@ -11,5 +11,5 @@
 
     To ensure the security and efficiency of the runtime environment and communication, we designed and implemented a secure and efficient microservices computing platform based on trusted execution environment, which includes a fine-grained, modular runtime system and a secure and efficient communication protocol. Our runtime has a small TCB and can prevent privileged mode attacks by leveraging the protection provided by Intel SGX. Our secure communication protocol combines the features of TLS and SGX remote attestation, which can defend against man-in-the-middle and replay attacks, ensure the legitimacy of other nodes, and achieve lower communication latency.
 
-    We also designed and implemented a sample image-processing microservice application to verify the platform's performance. The application is implemented in Rust to ensure the program's security. It uses gRPC for communication and JWT exchange method for authorization, enabling efficient communication and fine-grained authorization management. We tested the platform on a cloud server, and the results show that our platform achieves the design goal of secure and efficient microservices computing.
+    We also designed and implemented a sample image-processing microservice application to verify the platform's performance. The application is implemented in Rust to ensure the program's security. It uses gRPC for communication and Token exchange method for authorization, enabling efficient communication and fine-grained authorization management. We tested the platform on a cloud server, and the results show that our platform achieves the design goal of secure and efficient microservices computing.
 }{Microservice, TEE, Intel SGX, Runtime, Secure Communication Protocol, Rust, Security}
