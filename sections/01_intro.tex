@@ -36,7 +36,7 @@
     \item 设计并实现了一个Rust语言的简单的图像处理的微服务示例程序。
 \end{itemize}
 
-本文后续章节的安排如下：\cref{sec:background}介绍背景知识；\cref{sec:overview}介绍威胁模型和各部分设计；\cref{sec:implimentation}介绍平台的实现；\cref{sec:evaluation}介绍平台的评估；\cref{sec:discussion}是相关工作和展望；\cref{sec:conclusion}是总结。
+本文后续章节的安排如下：\cref{sec:background}介绍背景知识；\cref{sec:overview}介绍威胁模型和各部分设计；\cref{sec:implimentation-evaluation}介绍平台的实现和评估；\cref{sec:discussion}是相关工作和展望；\cref{sec:conclusion}是总结。
 
 %内部运行一个完整的操作系统，如Graphene~\cite{}、SCONE~\cite{}等；第二种是在SGX内部运行一个轻量级的运行时系统，如Occlum~\cite{}、Graphene-SGX~\cite{}等。第一种设计思路的优点是可以直接运行现有的应用程序，但是由于操作系统的复杂性，其本身的代码量较大，因此需要信任较多的代码，同时由于操作系统的复杂性，其本身的安全性也难以保证。第二种设计思路的优点是可以在SGX内部运行一个轻量级的运行时系统，因此可以大大减少运行时系统的代码量，从而减少信任的代码量，同时也可以提高运行时系统的安全性。但是，由于SGX的特性，其内部的运行时系统只能运行在SGX的受保护内存中，因此无法直接运行现有的应用程序，需要对应用程序进行修改，从而增加了开发的成本。
 
